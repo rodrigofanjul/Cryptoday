@@ -1,0 +1,7 @@
+<select name="cryptoCoins" id="">
+    <option *ngFor= "let coin of cryptoCoins.Data" value="{{coin.CoinInfo.Name}}">{{coin.CoinInfo.FullName}}({{coin.CoinInfo.Name}})</option>
+</select>
+
+<select name="Coins" id="">
+    <option *ngFor= "let coin of coins" value="{{coin.id}}">{{coin.name}}({{coin.id}})</option>
+</select>
