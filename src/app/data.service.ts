@@ -11,4 +11,8 @@ export class DataService {
   GetTopListCoins(){
     return this.http.get('https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=USD')
   }
+
+  async GetQuotation(firstCoin:String, secondCoin:String){
+    return this.http.get('https://min-api.cryptocompare.com/data/price?fsym=' + firstCoin +'&tsyms='+secondCoin);
+  }
 }

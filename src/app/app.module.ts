@@ -4,10 +4,12 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
+import {FormsModule } from '@angular/forms';
 
 import {HttpClientModule} from '@angular/common/http';
 import { DataService } from './data.service';
 import { ConversorComponent } from './conversor/conversor.component';
+// import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { ConversorComponent } from './conversor/conversor.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
