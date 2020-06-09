@@ -5,7 +5,7 @@
         <input type="number" class="browser-default custom-input custom-input-lg mb-3" value="1" [(ngModel)]="amount"> 
         <div id="coinsContainerFirst">
             <select id="firstCoins" class="browser-default custom-select custom-select-lg mb-3">
-                <option *ngFor="let coin of cryptoCoins.Data" value="{{coin.CoinInfo.Name}}" id="firstSelectInfo">
+                <option *ngFor="let coin of cryptoCoins.Data" value="{{coin.CoinInfo.Name}}">
                     {{coin.CoinInfo.FullName}}({{coin.CoinInfo.Name}})</option>
             </select>
         </div>
@@ -25,9 +25,15 @@
             Accept
         </button>
 
-        <div class="card" style="margin-top: 5%;" *ngIf="showQuotation">
+        <div class="card" style="margin-top: 5%;" *ngIf="showCryptoQuotation">
             <p>
                 {{aux2}}  {{firstSelectInfo}} = <strong>{{aux.value}}</strong> {{secondSelectInfo}}
+            </p>
+        </div>
+
+        <div class="card" style="margin-top: 5%;" *ngIf="showCoinQuotation">
+            <p>
+                {{aux2}}  {{secondSelectInfo}} = <strong>{{aux.value}}</strong> {{firstSelectInfo}}
             </p>
         </div>
     </div>

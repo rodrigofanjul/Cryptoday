@@ -13,7 +13,7 @@ export class ConversorComponent implements OnInit {
   //Listas de monedas
   cryptoCoins:any;
   coins:any = [
-    {id:"ARG", name:"Peso Argentino"},
+    {id:"ARS", name:"Peso Argentino"},
     {id:"USD", name:"Dolar estadounidense"},
     {id:"EUR", name:"Euro"},
     {id:"AUD", name:"Dolar austrailiano"},
@@ -29,8 +29,8 @@ export class ConversorComponent implements OnInit {
   @Input() coinCode:String;
 
   //Variables
-  quotation:any;
-  showQuotation:boolean = false;
+  showCryptoQuotation:boolean = false;
+  showCoinQuotation:boolean = false;
   amount:number = 1;
   
   //Selects del HTML
@@ -39,7 +39,7 @@ export class ConversorComponent implements OnInit {
 
   //Variables auxiliares
   aux:{
-    key:string, value:number
+    key:string, value:string
   };
   aux2:number;
   counter:number = 0;
@@ -56,12 +56,29 @@ export class ConversorComponent implements OnInit {
 
   onExchangeClick(){
 
-    let node = document.getElementById("coinsContainerFirst");
-    let secondNode = document.getElementById("coinsContainerSecond");
-    let aux = node.innerHTML;
+    let firstSelect:any = document.getElementById("firstCoins");
+    let firstSelectValue = firstSelect.options[firstSelect.selectedIndex].value;
+  
+    let secondSelect:any = document.getElementById("secondCoins");
+    let secondSelectValue = secondSelect.options[secondSelect.selectedIndex].value;
 
-    node.innerHTML = secondNode.innerHTML;
+    let firstNode:any = document.getElementById("coinsContainerFirst");
+    let secondNode:any = document.getElementById("coinsContainerSecond");
+    let aux = firstNode.innerHTML;
+
+    firstNode.innerHTML = secondNode.innerHTML;
     secondNode.innerHTML = aux;
+
+    if((this.counter % 2) == 0){
+
+      firstNode.firstChild.value = secondSelectValue;
+      secondNode.firstChild.value = firstSelectValue;
+    }else{
+      firstNode.firstChild.value = firstSelectValue;
+      secondNode.firstChild.value = secondSelectValue;
+    }
+
+    this.onCalculateClick();
 
     return this.counter++;
   }
@@ -78,20 +95,32 @@ export class ConversorComponent implements OnInit {
     this.aux2 = this.amount;
 
     (await this.dataService.GetQuotation(firstSelectValue, secondSelectValue)).subscribe((res:any) => {
-      this.quotation = res;
+      let quotation:any = res;
 
-      this.showQuotation = true;
+      this.aux = quotation;
   
-      this.aux = this.quotation;
+      if((this.counter % 2) == 0){
+
+        for (let key in quotation) {
+          this.aux.key = key;
+          this.aux.value = (parseFloat(quotation[key]) * this.amount).toFixed(2);
+        }
   
-      for (let key in this.quotation) {
-        this.aux.key = key;
-        this.aux.value = (parseInt(this.quotation[key]) * this.amount);
+        this.showCryptoQuotation = true;
+        this.showCoinQuotation = false;
+      }else{
+        for (let key in quotation) {
+          this.aux.key = key;
+          this.aux.value = (this.amount / parseFloat(quotation[key])).toFixed(7);
+        }
+  
+        this.showCryptoQuotation = false;
+        this.showCoinQuotation = true;
       }
+
     });
+
     
   }
-
-
 
 }
