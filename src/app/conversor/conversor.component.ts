@@ -9,6 +9,8 @@ import {DataService} from '../data.service';
 })
 export class ConversorComponent implements OnInit {
 
+
+  //Listas de monedas
   cryptoCoins:any;
   coins:any = [
     {id:"ARG", name:"Peso Argentino"},
@@ -21,14 +23,26 @@ export class ConversorComponent implements OnInit {
     {id:"CAD", name:"Dolar canadiense"},
     {id:"GBP", name:"Libra esterlina"}
   ];
+
+  //Inputs
   @Input() cryptoCoinCode:String;
   @Input() coinCode:String;
+
+  //Variables
   quotation:any;
   showQuotation:boolean = false;
+  amount:number = 1;
+  
+  //Selects del HTML
+  firstSelectInfo:any;
+  secondSelectInfo:any;
+
+  //Variables auxiliares
   aux:{
     key:string, value:number
   };
-  amount:number = 2;
+  aux2:number;
+  counter:number = 0;
 
   constructor(private dataService:DataService) { }
 
@@ -42,22 +56,26 @@ export class ConversorComponent implements OnInit {
 
   onExchangeClick(){
 
-    var node = document.getElementById("coinsContainerFirst");
-    var secondNode = document.getElementById("coinsContainerSecond");
-    var aux = node.innerHTML;
+    let node = document.getElementById("coinsContainerFirst");
+    let secondNode = document.getElementById("coinsContainerSecond");
+    let aux = node.innerHTML;
 
     node.innerHTML = secondNode.innerHTML;
     secondNode.innerHTML = aux;
+
+    return this.counter++;
   }
 
   async onCalculateClick(){
-    var firstSelect:any = document.getElementById("firstCoins");
-    var firstSelectValue = firstSelect.options[firstSelect.selectedIndex].value;
+    let firstSelect:any = document.getElementById("firstCoins");
+    let firstSelectValue = firstSelect.options[firstSelect.selectedIndex].value;
+    this.firstSelectInfo = firstSelect.options[firstSelect.selectedIndex].innerHTML;
+    
+    let secondSelect:any = document.getElementById("secondCoins");
+    let secondSelectValue = secondSelect.options[secondSelect.selectedIndex].value;
+    this.secondSelectInfo = secondSelect.options[secondSelect.selectedIndex].innerHTML;
 
-    var secondSelect:any = document.getElementById("secondCoins");
-    var secondSelectValue = secondSelect.options[secondSelect.selectedIndex].value;
-
-    console.log(this.amount);
+    this.aux2 = this.amount;
 
     (await this.dataService.GetQuotation(firstSelectValue, secondSelectValue)).subscribe((res:any) => {
       this.quotation = res;
@@ -70,11 +88,10 @@ export class ConversorComponent implements OnInit {
         this.aux.key = key;
         this.aux.value = (parseInt(this.quotation[key]) * this.amount);
       }
-      console.log(this.aux.value);
-      console.log(this.amount);
     });
     
-    
   }
+
+
 
 }
