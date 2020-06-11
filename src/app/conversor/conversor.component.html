@@ -1,40 +1,41 @@
-
-<div class="card" style="width: 22rem; margin: auto; vertical-align: bottom;">
-    <div class="card-body">
-
-        <input type="number" class="browser-default custom-input custom-input-lg mb-3" value="1" [(ngModel)]="amount"> 
-        <div id="coinsContainerFirst">
-            <select id="firstCoins" class="browser-default custom-select custom-select-lg mb-3">
-                <option *ngFor="let coin of cryptoCoins.Data" value="{{coin.CoinInfo.Name}}">
-                    {{coin.CoinInfo.FullName}}({{coin.CoinInfo.Name}})</option>
-            </select>
-        </div>
-
-        <button (click)="onExchangeClick()" type="button" class="btn btn-primary" style="margin-left: 30%; margin-bottom: 5%;">
-            Exchange
-        </button>
-
-        <div id="coinsContainerSecond">
-            <select id="secondCoins" class="browser-default custom-select custom-select-lg mb-3">
-                <option *ngFor="let coin of coins" value="{{coin.id}}" id="secondSelectInfo">
-                    {{coin.name}}({{coin.id}})</option>
-            </select>
-        </div>
-
-        <button (click)="onCalculateClick()" type="button" class="btn btn-primary">
-            Accept
-        </button>
-
-        <div class="card" style="margin-top: 5%;" *ngIf="showCryptoQuotation">
-            <p>
-                {{aux2}}  {{firstSelectInfo}} = <strong>{{aux.value}}</strong> {{secondSelectInfo}}
-            </p>
-        </div>
-
-        <div class="card" style="margin-top: 5%;" *ngIf="showCoinQuotation">
-            <p>
-                {{aux2}}  {{secondSelectInfo}} = <strong>{{aux.value}}</strong> {{firstSelectInfo}}
-            </p>
+<div class="container p-4">
+    <div class="card" style="width: 22rem; margin: auto; vertical-align: bottom;">
+        <div class="card-body">
+    
+            <input type="numbber" name="title" #newtitle class="form-control mb-4" value="1" [(ngModel)]="amount" autofocus>
+            <div id="coinsContainerFirst">
+                <select id="firstCoins" class="browser-default custom-select custom-select-lg mb-3">
+                    <option *ngFor="let coin of cryptoCoins.Data" value="{{coin.CoinInfo.Name}}">
+                        {{coin.CoinInfo.FullName}}({{coin.CoinInfo.Name}})</option>
+                </select>
+            </div>
+    
+            <button (click)="onExchangeClick()" type="button" class="btn btn-primary mb-3" style="margin-left: 30%;">
+                Exchange
+            </button>
+    
+            <div id="coinsContainerSecond">
+                <select id="secondCoins" class="browser-default custom-select custom-select-lg mb-3">
+                    <option *ngFor="let coin of coins" value="{{coin.id}}" id="secondSelectInfo">
+                        {{coin.name}}({{coin.id}})</option>
+                </select>
+            </div>
+    
+            <button (click)="onCalculateClick()" type="button" class="btn btn-primary">
+                Accept
+            </button>
+    
+            <div class="card" style="margin-top: 5%;" *ngIf="showCryptoQuotation">
+                <p>
+                    {{aux2}}  {{firstSelectInfo}} = <strong>{{aux.value}}</strong> {{secondSelectInfo}}
+                </p>
+            </div>
+    
+            <div class="card" style="margin-top: 5%;" *ngIf="showCoinQuotation">
+                <p>
+                    {{aux2}}  {{secondSelectInfo}} = <strong>{{aux.value}}</strong> {{firstSelectInfo}}
+                </p>
+            </div>
         </div>
     </div>
 </div>

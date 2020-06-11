@@ -9,13 +9,15 @@ import {FormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { DataService } from './data.service';
 import { ConversorComponent } from './conversor/conversor.component';
+import { LinksTableComponent } from './links-table/links-table.component';
 // import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavBarComponent,
-    ConversorComponent
+    ConversorComponent,
+    LinksTableComponent
   ],
   imports: [
     BrowserModule,

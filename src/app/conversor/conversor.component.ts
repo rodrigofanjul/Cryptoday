@@ -52,6 +52,8 @@ export class ConversorComponent implements OnInit {
       this.cryptoCoins = res;
       
     });
+
+    this.onLoad();
   }
 
   onExchangeClick(){
@@ -78,16 +80,18 @@ export class ConversorComponent implements OnInit {
       secondNode.firstChild.value = secondSelectValue;
     }
 
+
     this.onCalculateClick();
 
     return this.counter++;
   }
 
   async onCalculateClick(){
+
     let firstSelect:any = document.getElementById("firstCoins");
     let firstSelectValue = firstSelect.options[firstSelect.selectedIndex].value;
     this.firstSelectInfo = firstSelect.options[firstSelect.selectedIndex].innerHTML;
-    
+
     let secondSelect:any = document.getElementById("secondCoins");
     let secondSelectValue = secondSelect.options[secondSelect.selectedIndex].value;
     this.secondSelectInfo = secondSelect.options[secondSelect.selectedIndex].innerHTML;
@@ -98,7 +102,7 @@ export class ConversorComponent implements OnInit {
       let quotation:any = res;
 
       this.aux = quotation;
-  
+
       if((this.counter % 2) == 0){
 
         for (let key in quotation) {
@@ -108,6 +112,7 @@ export class ConversorComponent implements OnInit {
   
         this.showCryptoQuotation = true;
         this.showCoinQuotation = false;
+
       }else{
         for (let key in quotation) {
           this.aux.key = key;
@@ -120,7 +125,32 @@ export class ConversorComponent implements OnInit {
 
     });
 
-    
+  }
+
+  async onLoad(){
+
+    this.firstSelectInfo = "Bitcoin(BTC)";
+    this.secondSelectInfo = "Peso Argentino(ARS)";
+
+    this.aux2 = this.amount;
+
+    (await this.dataService.GetQuotation("BTC", "ARS")).subscribe((res:any) => {
+      let quotation:any = res;
+
+      this.aux = quotation;
+
+      if((this.counter % 2) == 0){
+
+        for (let key in quotation) {
+          this.aux.key = key;
+          this.aux.value = (parseFloat(quotation[key]) * this.amount).toFixed(2);
+        }
+  
+        this.showCryptoQuotation = true;
+        this.showCoinQuotation = false;
+      }
+
+    });
   }
 
 }
