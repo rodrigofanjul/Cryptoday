@@ -7,59 +7,10 @@
       </tr>
     </thead>
     <tbody>
-        <tr>
-        <th scope="row">1</th>
-        <td><a href="https://www.coinbase.com/" style="text-decoration:none; color:black">
-            <div style="height:100%;width:100%">
-                CoinBase
-            </div>
-          </a></td>
-        <td style="color: #998F8D;">(Bitcoin, Ethereum, Bitcoin Cash, Litecoin, Ethereum Classic)</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Robinhood</td>
-        <td style="color: #998F8D;">(Bitcoin, Ethereum, Bitcoin Cash, Litecoin, Bitcoin SV, Ethereum Classic, Dogecoin)</td>
-      </tr>
-      <tr>
-        <th scope="row">7</th>
-        <td>Cash App</td>
-        <td style="color: #998F8D;">(Bitcoin)</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td> Binance</td>
-        <td style="color: #998F8D;">(Bitcoin, Ethereum, Bitcoin Cash, Litecoin, Ripple)</td>
-      </tr>
-      <tr>
-        <th scope="row">4</th>
-        <td>Gate.io</td>
-        <td style="color: #998F8D;">199 Different Cryptocurrencies</td>
-      </tr>
-      <tr>
-        <th scope="row">5</th>
-        <td>Bitfinex</td>
-        <td style="color: #998F8D;">(Bitcoin, Ethereum, EOS, Litecoin, Ripple, NEO, Monero)</td>
-      </tr>
-      <tr>
-        <th scope="row">6</th>
-        <td>Cex.io</td>
-        <td style="color: #998F8D;">(Bitcoin, Ethereum, Bitcoin Cash, Litecoin, Bitcoin Gold, Zcash, Dash)</td>
-      </tr>
-      <tr>
-        <th scope="row">8</th>
-        <td>LocalBitcoins</td>
-        <td style="color: #998F8D;">(Bitcoin, Ethereum, Litecoin, XRP)</td>
-      </tr>
-      <tr>
-        <th scope="row">9</th>
-        <td>HitBTC</td>
-        <td style="color: #998F8D;">(Bitcoin, Ethereum, Litecoin, EOS, Ripple, Dogecoin, Monero, Tron, Dash, Tether)</td>
-      </tr>
-      <tr>
-        <th scope="row">10</th>
-        <td>Yobit</td>
-        <td style="color: #998F8D;">(Bitcoin, Ethereum, Bitcoin Cash, Litecoin, Dash, Dogecoin, Monero, Zcash)</td>
+      <tr *ngFor="let link of links">
+        <th scope="row"><a href="{{link.link}}" target="_blank"><div>{{link.rank}}</div></a></th>
+        <td><a href="{{link.link}}" target="_blank"><div>{{link.title}}</div></a></td>
+        <td><a href="{{link.link}}" target="_blank"><div style="color: #998F8D;">{{link.cryptocurrencies}}</div></a></td>
       </tr>
     </tbody>
   </table>

@@ -5,3 +5,13 @@
 .table-hover> tbody> tr:hover{
     cursor: pointer;
 }
+
+a {
+    text-decoration:none; 
+    color:black;
+}
+
+div{
+    height:100%;
+    width:100%;
+}
