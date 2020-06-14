@@ -6,13 +6,22 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DataService {
 
+  firstCoin:string;
+  secondCoin:string;
+
   constructor(private http: HttpClient) { }
 
-  GetTopListCoins(){
-    return this.http.get('https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=USD')
+  GetQuotationInterval(param1, param2){
+    let interval = setInterval(() => this.GetQuotation.bind(this, param1, param2), 2000);
+
+    return interval;
   }
 
-  async GetQuotation(firstCoin:String, secondCoin:String){
-    return this.http.get('https://min-api.cryptocompare.com/data/price?fsym=' + firstCoin +'&tsyms='+secondCoin);
+  GetTopListCoins():Promise<any>{
+    return this.http.get('https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=USD').toPromise();
+  }
+
+  GetQuotation(firstCoin:String, secondCoin:String):Promise<any>{
+    return this.http.get('https://min-api.cryptocompare.com/data/price?fsym=' + firstCoin +'&tsyms='+secondCoin).toPromise();
   }
 }

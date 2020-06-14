@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {DataService} from '../data.service';
+import { Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -29,7 +31,7 @@ export class ConversorComponent implements OnInit {
   @Input() coinCode:String;
 
   //Variables
-  showCryptoQuotation:boolean = false;
+  showCryptoQuotation:boolean = true;
   showCoinQuotation:boolean = false;
   amount:number = 1;
   
@@ -43,20 +45,28 @@ export class ConversorComponent implements OnInit {
   };
   aux2:number;
   counter:number = 0;
+  // private fetchData: Observable<any> = this.dataService.GetTopListCoins();
+  subscription: Subscription;
+  statusText: string;
 
   constructor(private dataService:DataService) { }
 
   ngOnInit(): void {
 
-    this.dataService.GetTopListCoins().subscribe((res:any) => {
-      this.cryptoCoins = res;
-      
+    this.dataService.GetTopListCoins().then((res) => {
+        this.cryptoCoins = res;
+      }
+    ).catch(function(val){
+      console.log(val);
     });
 
     this.onLoad();
   }
 
   onExchangeClick(){
+
+    if(this.subscription)
+      this.subscription.unsubscribe();
 
     let firstSelect:any = document.getElementById("firstCoins");
     let firstSelectValue = firstSelect.options[firstSelect.selectedIndex].value;
@@ -86,7 +96,10 @@ export class ConversorComponent implements OnInit {
     return this.counter++;
   }
 
-  async onCalculateClick(){
+  onCalculateClick(){
+
+    if(this.subscription)
+      this.subscription.unsubscribe();
 
     let firstSelect:any = document.getElementById("firstCoins");
     let firstSelectValue = firstSelect.options[firstSelect.selectedIndex].value;
@@ -98,7 +111,10 @@ export class ConversorComponent implements OnInit {
 
     this.aux2 = this.amount;
 
-    (await this.dataService.GetQuotation(firstSelectValue, secondSelectValue)).subscribe((res:any) => {
+    this.subscription = timer(0, 5000).pipe(
+      switchMap(() => this.dataService.GetQuotation(firstSelectValue,secondSelectValue))
+    ).subscribe(res => {
+
       let quotation:any = res;
 
       this.aux = quotation;
@@ -124,33 +140,32 @@ export class ConversorComponent implements OnInit {
       }
 
     });
-
   }
 
-  async onLoad(){
+  onLoad(){
+
+    if(this.subscription)
+      this.subscription.unsubscribe();
 
     this.firstSelectInfo = "Bitcoin(BTC)";
     this.secondSelectInfo = "Peso Argentino(ARS)";
 
     this.aux2 = this.amount;
 
-    (await this.dataService.GetQuotation("BTC", "ARS")).subscribe((res:any) => {
-      let quotation:any = res;
-
-      this.aux = quotation;
-
-      if((this.counter % 2) == 0){
-
+    this.subscription = timer(0, 5000).pipe(
+      switchMap(() => this.dataService.GetQuotation("BTC","ARS"))
+    ).subscribe(res => {
+        let quotation:any = res;
+  
+        this.aux = quotation;
+  
         for (let key in quotation) {
           this.aux.key = key;
           this.aux.value = (parseFloat(quotation[key]) * this.amount).toFixed(2);
         }
-  
-        this.showCryptoQuotation = true;
-        this.showCoinQuotation = false;
-      }
 
     });
+
   }
 
 }
