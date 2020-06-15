@@ -18,14 +18,24 @@
                 <th scope="col">24H CHG</th>
               </tr>
             </thead>
-            <tbody>
-              <tr *ngFor="let coin of aux">
+            <tbody id="tableRefresh">
+              <tr *ngFor="let coin of informationList; trackBy: trackItem" (click)="cryptocurrencySelected(coin)">
                 <th>
                     <img alt="" src="{{coin.image}}" id="coinImage">
                     <p id="coinName">{{coin.name}}</p>
                 </th>
                 <td><p>{{coin.price}}</p></td>
-                <td>{{coin.variation}}%</td>
+                <td>
+                    <p class="perc falling" *ngIf="coin.variation.charAt(0)=='-'; else Positive">
+                        {{coin.variation}}%
+                    </p>
+
+                    <ng-template #Positive>
+                        <p class="perc rising">
+                            {{coin.variation}}%
+                        </p>
+                    </ng-template>              
+                </td>
               </tr>
             </tbody>
           </table>
@@ -36,9 +46,9 @@
             <div class="left">
                 <label>Bitcoin Price</label>
                 <div>
-                    <img alt="Bitcoin" src="https://www.cryptocompare.com/media/19633/btc.png">
-                    <p class="price">$9,240.26</p>
-                    <p class="perc-horizontal falling">2.05%</p>
+                    <img alt="" src="{{card.image}}">
+                    <p class="price">{{card.price}}</p>
+                    <p class="perc-horizontal falling">{{card.variation}}</p>
                     <!-- <p class="perc-vertical falling">2.05%</p> -->
                 </div>
             </div>
@@ -46,27 +56,29 @@
                 <div class="top">
                     <div>
                         <label>MKT CAP</label>
-                        <p>$170.07B</p>
+                        <p>{{card.mktCap}}</p>
                     </div>
                     <div>
                         <label>CIRC SPLY</label>
-                        <p>18,404,987 BTC</p>
+                        <p>{{card.circSply}}</p>
                     </div>
                     <div>
                         <label>24H VOL</label>
-                        <p>$1.96B</p>
+                        <p>{{card.allDayVol}}</p>
                     </div>
                 </div>
-                <div class="bottom"><div>
+                <div class="bottom" id="label_high_low"><div>
                     <label>24H HIGH/LOW</label>
-                    <p>$9,444.21 / $9,218.10</p>
+                    <p>{{card.dayHigh}} / {{card.dayLow}}</p>
                 </div>
                 <div></div>
             </div>
         </div>
-    
+    </div>  
 
-        <div id="divChart" class="x">
+    <div class="chart-wrapper">
+
+        <div id="divChart">
         
             <canvas id="myChart"></canvas>
         </div>
