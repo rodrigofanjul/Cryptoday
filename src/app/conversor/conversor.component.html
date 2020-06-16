@@ -47,10 +47,8 @@
                 <div class="card-header">
                     Top 10 Leaderboard
                     <div class="float-right">
-                        <select id="selectCurrency">
-                            <option value="0">USD</option>
-                            <option value="1">EUR</option>
-                            <option value="2">GBP</option>
+                        <select (change)="currencySelected()" id="optionCurrency">
+                            <option *ngFor="let coin of coins" value="{{coin.id}}">{{coin.id}}</option>
                         </select>
                     </div>
                 </div>
@@ -64,7 +62,7 @@
                             </tr>
                         </thead>
                         <tbody id="tableRefresh">
-                            <tr *ngFor="let coin of informationList; trackBy: trackItem" (click)="cryptocurrencySelected(coin)">
+                            <tr *ngFor="let coin of informationList; trackBy: trackItem" (click)="cryptoCurrencySelected(coin)">
                                 <td>
                                     <img class="coin-image rounded-circle" alt="Coin Image" src="{{coin.image}}" >
                                     <p class="coin-name ml-2">{{coin.name}}</p>
@@ -101,7 +99,7 @@
                                 <div class="card-body">
 
                                     <div class="row mx-auto">
-                                        <img alt="Coin Image" class="rounded-circle w-20" src="{{card.image}}">
+                                        <img id="coin-image-card" class="rounded-circle w-20" alt="{{card.name}}" src="{{card.image}}">
                                         <h4 class="ml-2 coin-price">{{card.price}}</h4>
                                     </div>
                                     <div class="row">

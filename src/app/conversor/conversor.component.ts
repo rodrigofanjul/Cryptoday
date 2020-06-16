@@ -50,6 +50,8 @@ export class ConversorComponent implements OnInit {
   conversorCounter:number = 0;
   // private fetchData: Observable<any> = this.dataService.GetTopListCoins();
   subscription: Subscription;
+  leadBoardSubscription: Subscription;
+  cardSubscription: Subscription;
   statusText: string;
 
   //Chartss
@@ -62,19 +64,10 @@ export class ConversorComponent implements OnInit {
   constructor(private dataService:DataService) { }
 
   ngOnInit(): void {
-
-    this.dataService.GetTopListCoins().then((res) => {
-        this.cryptoCoins = res;
-      }
-    ).catch(function(val){
-      console.log(val);
-    });
-
     this.onLoad();
-
-    this.getLeadBoardInformation();
-    this.getCardInformation("BTC");    
-    this.showCryptocurrenciesDaily("BTC");
+    this.getCardInformation("BTC", "USD");
+    this.getLeadBoardInformation("USD");
+    this.showCryptocurrenciesDaily("BTC", "USD");
   }
 
   onExchangeClick(){
@@ -160,6 +153,13 @@ export class ConversorComponent implements OnInit {
     if(this.subscription)
       this.subscription.unsubscribe();
 
+    this.dataService.GetTopListCoins("USD").then((res) => {
+        this.cryptoCoins = res;
+      }
+    ).catch(function(val){
+      console.log(val);
+    });
+
     this.firstSelectInfo = "Bitcoin(BTC)";
     this.secondSelectInfo = "Peso Argentino(ARS)";
 
@@ -181,9 +181,9 @@ export class ConversorComponent implements OnInit {
 
   }
 
-  showCryptocurrenciesDaily(cryptoCurrency:string){
+  showCryptocurrenciesDaily(cryptoCurrency:string, currency:string){
 
-    this.dataService.GetRegisterDaily(cryptoCurrency).then((res) => {
+    this.dataService.GetRegisterDaily(cryptoCurrency, currency).then((res) => {
 
       let allRegisters = res.Data.Data;
       let allDates = [];
@@ -201,7 +201,9 @@ export class ConversorComponent implements OnInit {
         allMaximumQuotization.push((res.high).toFixed(2));
       });
 
-      var chart = new Chart('chart-canvas', {
+      let currencyInfo = this.coins.find(element => element.id == currency);
+
+      var chart = new Chart('myChart', {
         type: 'line',
         data: {
           labels: allDates,
@@ -243,7 +245,7 @@ export class ConversorComponent implements OnInit {
               display: true,
               scaleLabel: {
                 display: true,
-                labelString: 'Dolar Estadounidense(USD)'
+                labelString: (currencyInfo.name + '(' +currencyInfo.id + ')')
               }
             }]
           }
@@ -255,16 +257,18 @@ export class ConversorComponent implements OnInit {
   }
 
 
-  getLeadBoardInformation(){
+  getLeadBoardInformation(currency:string){
 
-    this.subscription = timer(0, 10000).pipe(
-      switchMap(() => this.dataService.GetTopListCoins())
+    if(this.leadBoardSubscription)
+      this.leadBoardSubscription.unsubscribe();
+
+    this.leadBoardSubscription = timer(0, 10000).pipe(
+      switchMap(() => this.dataService.GetTopListCoins(currency))
     ).subscribe(res => {
-      if(this.chartCounter > 0){
-        var node = document.getElementById('tableRefresh');
-        node.querySelectorAll('*').forEach(n => n.remove());
-      }
-        
+      
+      var node = document.getElementById('tableRefresh');
+      node.querySelectorAll('*').forEach(n => n.remove());
+
       let allRegisters = res.Data;
       let name:string;
       let image:string;
@@ -275,8 +279,8 @@ export class ConversorComponent implements OnInit {
 
         name = res['CoinInfo']['Name'];
         image = res['CoinInfo']['ImageUrl'];
-        price = res['DISPLAY']['USD']['PRICE'];
-        variation = res['DISPLAY']['USD']['CHANGEPCT24HOUR'];
+        price = res['DISPLAY'][currency]['PRICE'];
+        variation = res['DISPLAY'][currency]['CHANGEPCT24HOUR'];
 
         this.informationList.push(new leadboardObject(this.chartCounter++ , name, ("https://www.cryptocompare.com/" + image), price, variation));
       });
@@ -288,16 +292,30 @@ export class ConversorComponent implements OnInit {
     return item.id;
   }
 
-  cryptocurrencySelected(crypto:leadboardObject){
+  cryptoCurrencySelected(crypto:leadboardObject){
     let cryptoCurrencyName = crypto['name'];
+    var currencySelected = (<HTMLInputElement>document.getElementById('optionCurrency')).value;
     
-    var node = document.getElementById('chart');
+    var node = document.getElementById('divChart');
     node.querySelectorAll('*').forEach(n => n.remove());
 
     this.createCanvas();
 
-    this.getCardInformation(cryptoCurrencyName);
-    this.showCryptocurrenciesDaily(cryptoCurrencyName);
+    this.getCardInformation(cryptoCurrencyName, currencySelected);
+    this.showCryptocurrenciesDaily(cryptoCurrencyName, currencySelected);
+  }
+
+  currencySelected(){
+    var currencySelected = (<HTMLInputElement>document.getElementById('optionCurrency')).value;
+    var cryptoCurrencyName = (<HTMLInputElement>document.getElementById('coin-image-card')).alt;
+
+    var node = document.getElementById('divChart');
+    node.querySelectorAll('*').forEach(n => n.remove());
+    this.createCanvas();
+
+    this.getCardInformation(cryptoCurrencyName, currencySelected);
+    this.showCryptocurrenciesDaily(cryptoCurrencyName, currencySelected);
+    this.getLeadBoardInformation(currencySelected);
   }
 
   createCanvas(){
@@ -307,9 +325,14 @@ export class ConversorComponent implements OnInit {
     node.appendChild(newCanvas);
   }
 
-  getCardInformation(cryptoCurrencyName:string){
+  getCardInformation(cryptoCurrencyName:string, currency:string){
     
-    this.dataService.GetTopListCoins().then((res) => {
+    if(this.cardSubscription)
+      this.cardSubscription.unsubscribe();
+
+    this.cardSubscription = timer(0, 10000).pipe(
+      switchMap(() => this.dataService.GetTopListCoins(currency))
+    ).subscribe((res) => {
 
       let allRegisters:Array<any> = res.Data;
 
@@ -319,22 +342,19 @@ export class ConversorComponent implements OnInit {
 
         if(name == cryptoCurrencyName){
 
-          let price = res['DISPLAY']['USD']['PRICE'];
-          let variation = res['DISPLAY']['USD']['CHANGEPCT24HOUR'];
+          let price = res['DISPLAY'][currency]['PRICE'];
+          let variation = res['DISPLAY'][currency]['CHANGEPCT24HOUR'];
           let image = res['CoinInfo']['ImageUrl'];
-          let mktCap = res['DISPLAY']['USD']['MKTCAP'];
-          let circSply = res['DISPLAY']['USD']['SUPPLY'];
-          let allDayVol = res['DISPLAY']['USD']['TOTALVOLUME24HTO'];
-          let dayHigh = res['DISPLAY']['USD']['HIGH24HOUR'];
-          let dayLow = res['DISPLAY']['USD']['LOW24HOUR'];
+          let mktCap = res['DISPLAY'][currency]['MKTCAP'];
+          let circSply = res['DISPLAY'][currency]['SUPPLY'];
+          let allDayVol = res['DISPLAY'][currency]['TOTALVOLUME24HTO'];
+          let dayHigh = res['DISPLAY'][currency]['HIGH24HOUR'];
+          let dayLow = res['DISPLAY'][currency]['LOW24HOUR'];
 
-          this.card = new cardObject(mktCap, circSply, allDayVol, dayHigh, dayLow, "https://www.cryptocompare.com" + image, price, variation);
-
+          this.card = new cardObject(cryptoCurrencyName, mktCap, circSply, allDayVol, dayHigh, dayLow, "https://www.cryptocompare.com" + image, price, variation);
         }
 
       });
-      
-      console.log(this.card);
       
     });
   }
