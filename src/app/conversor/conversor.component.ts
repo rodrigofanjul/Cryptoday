@@ -53,7 +53,7 @@ export class ConversorComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.dataService.GetTopListCoins().then((res) => {
+    this.dataService.GetTopListCoins("USD").then((res) => {
         this.cryptoCoins = res;
       }
     ).catch(function(val){
