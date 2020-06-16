@@ -1,42 +1,161 @@
-<div class="container p-4">
-    <div class="card" style="width: 22rem; margin: auto; vertical-align: bottom;">
-        <div class="card-body">
-    
-            <input type="numbber" name="title" #newtitle class="form-control mb-4" value="1" [(ngModel)]="amount" autofocus>
-            <div id="coinsContainerFirst">
-                <select id="firstCoins" class="browser-default custom-select custom-select-lg mb-3">
-                    <option *ngFor="let coin of cryptoCoins.Data" value="{{coin.CoinInfo.Name}}">
-                        {{coin.CoinInfo.FullName}}({{coin.CoinInfo.Name}})</option>
-                </select>
-            </div>
-    
-            <button (click)="onExchangeClick()" type="button" class="btn btn-primary mb-3" style="margin-left: 30%;">
-                Exchange
-            </button>
-    
-            <div id="coinsContainerSecond">
-                <select id="secondCoins" class="browser-default custom-select custom-select-lg mb-3">
-                    <option *ngFor="let coin of coins" value="{{coin.id}}" id="secondSelectInfo">
-                        {{coin.name}}({{coin.id}})</option>
-                </select>
-            </div>
-    
-            <button (click)="onCalculateClick()" type="button" class="btn btn-primary">
-                Accept
-            </button>
-    
-            <div class="card" style="margin-top: 5%;" *ngIf="showCryptoQuotation">
-                <p>
-                    {{aux2}}  {{firstSelectInfo}} = <strong>{{aux.value}}</strong> {{secondSelectInfo}}
-                </p>
-            </div>
-    
-            <div class="card" style="margin-top: 5%;" *ngIf="showCoinQuotation">
-                <p>
-                    {{aux2}}  {{secondSelectInfo}} = <strong>{{aux.value}}</strong> {{firstSelectInfo}}
-                </p>
+<div class="container-fluid py-2">
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+            <div class="card">
+                <div class="card-header">
+                    Coin Converter
+                </div>
+                <div class="card-body">
+                    
+                    <input type="number" name="title" #newtitle class="form-control mb-4" value="1" [(ngModel)]="amount" autofocus>
+                    <div id="coinsContainerFirst">
+                        <select id="firstCoins" class="browser-default custom-select custom-select-lg mb-3">
+                            <option *ngFor="let coin of cryptoCoins.Data" value="{{coin.CoinInfo.Name}}">
+                                {{coin.CoinInfo.FullName}}({{coin.CoinInfo.Name}})</option>
+                        </select>
+                    </div>
+            
+                    <button (click)="onExchangeClick()" type="button" class="btn btn-primary mb-3">
+                        Exchange
+                    </button>
+            
+                    <div id="coinsContainerSecond">
+                        <select id="secondCoins" class="browser-default custom-select custom-select-lg mb-3">
+                            <option *ngFor="let coin of coins" value="{{coin.id}}" id="secondSelectInfo">
+                                {{coin.name}}({{coin.id}})</option>
+                        </select>
+                    </div>
+            
+                    <button (click)="onCalculateClick()" type="button" class="btn btn-primary">
+                        Accept
+                    </button>
+            
+                    <div class="card" *ngIf="showCryptoQuotation">
+                        <p>
+                            {{aux2}}  {{firstSelectInfo}} = <strong>{{aux.value}}</strong> {{secondSelectInfo}}
+                        </p>
+                    </div>
+            
+                    <div class="card" *ngIf="showCoinQuotation">
+                        <p>
+                            {{aux2}}  {{secondSelectInfo}} = <strong>{{aux.value}}</strong> {{firstSelectInfo}}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
+        <div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+            <div class="card">
+                <div class="card-header">
+                    Top 10 Leaderboard
+                    <div class="float-right">
+                        <select id="selectCurrency">
+                            <option value="0">USD</option>
+                            <option value="1">EUR</option>
+                            <option value="2">GBP</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead class="text-secondary">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">24H CHG</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableRefresh">
+                            <tr *ngFor="let coin of informationList; trackBy: trackItem" (click)="cryptocurrencySelected(coin)">
+                                <td>
+                                    <img class="coin-image rounded-circle" alt="Coin Image" src="{{coin.image}}" >
+                                    <p class="coin-name ml-2">{{coin.name}}</p>
+                                </td>
+                                <td><p>{{coin.price}}</p></td>
+                                <td>
+                                    <p class="perc falling" *ngIf="coin.variation.charAt(0)=='-'; else Positive">
+                                        {{coin.variation}}%
+                                    </p>
+
+                                    <ng-template #Positive>
+                                        <p class="perc rising">
+                                            {{coin.variation}}%
+                                        </p>
+                                    </ng-template>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 mt-2">
+
+            <div class="card">
+                <div class="card-header">
+                    Coin Stats
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <div class="row mx-auto">
+                                        <img alt="Coin Image" class="rounded-circle w-20" src="{{card.image}}">
+                                        <h4 class="ml-2 coin-price">{{card.price}}</h4>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 mt-2">
+                                            <p class="perc falling" *ngIf="card.variation.charAt(0)=='-'; else Positive">{{card.variation}}%</p>
+                                            <ng-template #Positive>
+                                                <p class="perc rising">{{card.variation}}%</p>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-12 mt-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <h6 class="border-bottom">MARKET CAP</h6>
+                                            <p>{{card.mktCap}}</p>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <h6 class="border-bottom">CIRC. SUPPLY</h6>
+                                            <p>{{card.circSply}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <h6 class="border-bottom">24H VOL</h6>
+                                            <p>{{card.allDayVol}}</p>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <h6 class="border-bottom">24H RANGE</h6>
+                                            <p>{{card.dayLow}} / {{card.dayHigh}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>   
+                        </div>                         
+                    </div>
+                </div>            
+
+                <div class="chart-wrapper mt-1">
+                    <div id="chart">
+                        <canvas id="chart-canvas"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>     
+</div>

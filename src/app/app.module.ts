@@ -11,7 +11,6 @@ import {HttpClientModule} from '@angular/common/http';
 import { DataService } from './data.service';
 import { ConversorComponent } from './conversor/conversor.component';
 import { LinksTableComponent } from './links-table/links-table.component';
-import { ChartsComponent } from './charts/charts.component';
 // import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
@@ -19,8 +18,7 @@ import { ChartsComponent } from './charts/charts.component';
     AppComponent,
     NavBarComponent,
     ConversorComponent,
-    LinksTableComponent,
-    ChartsComponent
+    LinksTableComponent
   ],
   imports: [
     BrowserModule,
