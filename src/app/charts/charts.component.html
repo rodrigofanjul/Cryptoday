@@ -1,0 +1,109 @@
+<div class="col-lg-3 col-md-6 col-sm-12 mt-2">
+    <div class="card">
+        <div class="card-header">
+            Top 10 Leaderboard
+            <div class="float-right">
+                <select (change)="currencySelected()" id="optionCurrency">
+                    <option *ngFor="let coin of coins" value="{{coin.id}}">{{coin.id}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="text-secondary">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">24H CHG</th>
+                    </tr>
+                </thead>
+                <tbody id="tableRefresh">
+                    <tr *ngFor="let coin of informationList; trackBy: trackItem" (click)="cryptoCurrencySelected(coin)">
+                        <td>
+                            <img class="coin-image rounded-circle" alt="Coin Image" src="{{coin.image}}" >
+                            <p class="coin-name ml-2">{{coin.name}}</p>
+                        </td>
+                        <td><p>{{coin.price}}</p></td>
+                        <td>
+                            <p class="perc falling" *ngIf="coin.variation.charAt(0)=='-'; else Positive">
+                                {{coin.variation}}%
+                            </p>
+
+                            <ng-template #Positive>
+                                <p class="perc rising">
+                                    {{coin.variation}}%
+                                </p>
+                            </ng-template>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6 col-md-12 mt-2">
+
+    <div class="card">
+        <div class="card-header">
+            Coin Stats
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="row mx-auto">
+                                <img id="coin-image-card" class="rounded-circle w-20" alt="{{card.name}}" src="{{card.image}}">
+                                <h4 class="ml-2 coin-price">{{card.price}}</h4>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mt-2">
+                                    <p class="perc falling" *ngIf="card.variation.charAt(0)=='-'; else Positive">{{card.variation}}%</p>
+                                    <ng-template #Positive>
+                                        <p class="perc rising">{{card.variation}}%</p>
+                                    </ng-template>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-12 mt-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <h6 class="border-bottom">MARKET CAP</h6>
+                                    <p>{{card.mktCap}}</p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <h6 class="border-bottom">CIRC. SUPPLY</h6>
+                                    <p>{{card.circSply}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <h6 class="border-bottom">24H VOL</h6>
+                                    <p>{{card.allDayVol}}</p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <h6 class="border-bottom">24H RANGE</h6>
+                                    <p>{{card.dayLow}} / {{card.dayHigh}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+                </div>                         
+            </div>
+        </div>            
+
+        <div class="chart-wrapper mt-1">
+            <div id="chart">
+                <canvas id="chart-canvas"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>

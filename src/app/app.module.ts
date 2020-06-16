@@ -4,13 +4,14 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
-import {FormsModule } from '@angular/forms';
-import {ChartsModule} from 'ng2-charts';
+import { FormsModule } from '@angular/forms';
+import { ChartsModule } from 'ng2-charts';
 
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { DataService } from './data.service';
 import { ConversorComponent } from './conversor/conversor.component';
 import { LinksTableComponent } from './links-table/links-table.component';
+import { ChartsComponent } from './charts/charts.component';
 // import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
@@ -18,7 +19,8 @@ import { LinksTableComponent } from './links-table/links-table.component';
     AppComponent,
     NavBarComponent,
     ConversorComponent,
-    LinksTableComponent
+    LinksTableComponent,
+    ChartsComponent
   ],
   imports: [
     BrowserModule,
