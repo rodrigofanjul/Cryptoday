@@ -1,7 +1,10 @@
 <div class="card">
+  <div class="card-header">
+    Coin Markets
+  </div>
   <div class="card-body">
     <table class="table table-hover">
-      <thead class="">
+      <thead class="text-secondary">
         <tr>
           <th scope="col">#</th>
           <th scope="col">Pages</th>
@@ -10,7 +13,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let link of links">
-          <th scope="row"><a href="{{link.link}}" target="_blank"><div>{{link.rank}}</div></a></th>
+          <td class="py-1"><a href="{{link.link}}" target="_blank"><div>{{link.rank}}</div></a></td>
           <td><a href="{{link.link}}" target="_blank"><div>{{link.title}}</div></a></td>
           <td><a href="{{link.link}}" target="_blank"><div style="color: #998F8D;">{{link.cryptocurrencies}}</div></a></td>
         </tr>

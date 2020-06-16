@@ -2,50 +2,54 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { Router } from '@angular/router';
 import { Chart } from 'chart.js';
-import { leadboardObject } from './leadboardObject.model';
 import { cardObject } from './cardObject.model';
+import { ChartService } from '../chart.service';
 
 @Component({
-  selector: 'app-charts',
-  templateUrl: './charts.component.html',
-  styleUrls: ['./charts.component.css']
+  selector: 'app-card',
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.css']
 })
-export class ChartsComponent implements OnInit {
+export class CardComponent implements OnInit {
 
   chart = [];
   cryptoCurrencies:any;
   coins:any = this.dataService.GetCoins();
-  informationList:Array<leadboardObject> = [];
-  leadBoardSubscription: Subscription;
-  cardSubscription: Subscription;
+  subscription: Subscription;
+  currencySubscription: Subscription;
+  cryptoCurrencySubscription: Subscription;
   counter:number = 0;
   card:cardObject;
+  currency:string = "USD";
+  cryptoCurrency:string = "BTC";
 
-  constructor(private dataService:DataService, private router: Router) {
-    
-    router.events.subscribe((val) => {
+  constructor(private dataService:DataService, private chartService: ChartService) { 
+    this.currencySubscription = chartService.updateCurrency$.subscribe(
+      currency => {
+        this.currency = currency;
+        this.loadCard();
+    });
 
-      let rout = val['snapshot']['_routerState']['url'];
-
-      if(rout != "/chart"){
-        if(this.leadBoardSubscription)
-          this.leadBoardSubscription.unsubscribe();
-        if(this.cardSubscription)
-          this.cardSubscription.unsubscribe();
-      }        
+    this.cryptoCurrencySubscription = chartService.updateCrypto$.subscribe(
+      cryptoCurrency => {
+        this.cryptoCurrency = cryptoCurrency;
+        this.loadCard();
     });
   }
 
   ngOnInit(): void {
-    this.getCardInformation("BTC", "USD");
-    this.getLeadBoardInformation("USD");
-    this.showCryptocurrenciesGraphicDaily("BTC", "USD");
+    this.loadCard();
+  }
+
+  loadCard() {
+    this.getCardInformation(this.cryptoCurrency, this.currency);
+    this.showCryptocurrenciesGraphicDaily(this.cryptoCurrency, this.currency);
   }
 
   showCryptocurrenciesGraphicDaily(cryptoCurrency:string, currency:string){
 
+    this.reloadCanvas();
     this.dataService.GetRegisterDaily(cryptoCurrency, currency).then((res) => {
 
       let allRegisters = res.Data.Data;
@@ -117,82 +121,20 @@ export class ChartsComponent implements OnInit {
     });
   }
 
-  getLeadBoardInformation(currency:string){
-
-    if(this.leadBoardSubscription)
-      this.leadBoardSubscription.unsubscribe();
-
-    this.leadBoardSubscription = timer(0, 10000).pipe(
-      switchMap(() => this.dataService.GetTopListCoins(currency))
-    ).subscribe(res => {
-      
-      var node = document.getElementById('tableRefresh');
-      node.querySelectorAll('*').forEach(n => n.remove());
-
-      let allRegisters = res.Data;
-      let name:string;
-      let image:string;
-      let price:string;
-      let variation:string;
-
-      allRegisters.forEach((res) => {
-
-        name = res['CoinInfo']['Name'];
-        image = res['CoinInfo']['ImageUrl'];
-        price = res['DISPLAY'][currency]['PRICE'];
-        variation = res['DISPLAY'][currency]['CHANGEPCT24HOUR'];
-
-        this.informationList.push(new leadboardObject(this.counter++ , name, ("https://www.cryptocompare.com/" + image), price, variation));
-      });
-    });
-  }
-
-  public trackItem (index: number, item: leadboardObject) {
-    
-    return item.id;
-  }
-
-  cryptoCurrencySelected(crypto:leadboardObject){
-    let cryptoCurrencyName = crypto['name'];
-    var currencySelected = (<HTMLInputElement>document.getElementById('optionCurrency')).value;
-    
-    var node = document.getElementById('divChart');
-    node.querySelectorAll('*').forEach(n => n.remove());
-
-    this.createCanvas();
-
-    this.getCardInformation(cryptoCurrencyName, currencySelected);
-    this.showCryptocurrenciesGraphicDaily(cryptoCurrencyName, currencySelected);
-  }
-
-  currencySelected(){
-    var currencySelected = (<HTMLInputElement>document.getElementById('optionCurrency')).value;
-    var cryptoCurrencyName = (<HTMLInputElement>document.getElementById('coin-image-card')).alt;
-
+  reloadCanvas(){
     var node = document.getElementById('chart');
     node.querySelectorAll('*').forEach(n => n.remove());
-    this.createCanvas();
-
-    this.getCardInformation(cryptoCurrencyName, currencySelected);
-    this.showCryptocurrenciesGraphicDaily(cryptoCurrencyName, currencySelected);
-    this.getLeadBoardInformation(currencySelected);
-  }
-
-  createCanvas(){
-    var node = document.getElementById('chart');
-
     var newCanvas = document.createElement('canvas');
     newCanvas.setAttribute("id", "chart-canvas");
-
     node.appendChild(newCanvas);
   }
 
   getCardInformation(cryptoCurrencyName:string, currency:string){
     
-    if(this.cardSubscription)
-      this.cardSubscription.unsubscribe();
+    if(this.subscription)
+      this.subscription.unsubscribe();
 
-    this.cardSubscription = timer(0, 10000).pipe(
+    this.subscription = timer(0, 10000).pipe(
       switchMap(() => this.dataService.GetTopListCoins(currency))
     ).subscribe((res) => {
 

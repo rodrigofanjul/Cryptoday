@@ -9,9 +9,11 @@ import { ChartsModule } from 'ng2-charts';
 
 import { HttpClientModule } from '@angular/common/http';
 import { DataService } from './data.service';
+import { ChartService } from './chart.service';
 import { ConversorComponent } from './conversor/conversor.component';
 import { LinksTableComponent } from './links-table/links-table.component';
-import { ChartsComponent } from './charts/charts.component';
+import { LeadboardComponent } from './leadboard/leadboard.component';
+import { CardComponent } from './card/card.component';
 // import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
@@ -20,7 +22,8 @@ import { ChartsComponent } from './charts/charts.component';
     NavBarComponent,
     ConversorComponent,
     LinksTableComponent,
-    ChartsComponent
+    LeadboardComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +32,7 @@ import { ChartsComponent } from './charts/charts.component';
     FormsModule,
     ChartsModule
   ],
-  providers: [DataService],
+  providers: [DataService,ChartService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

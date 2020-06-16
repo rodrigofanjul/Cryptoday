@@ -1,0 +1,41 @@
+<div class="card">
+    <div class="card-header">
+        Top 10 Leaderboard
+        <div class="float-right">
+            <select id="optionCurrency" (change)="onChangeCurrency()">
+                <option *ngFor="let coin of coins" value="{{coin.id}}">{{coin.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="text-secondary">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">24H CHG</th>
+                </tr>
+            </thead>
+            <tbody id="tableRefresh">
+                <tr class="align-middle" *ngFor="let coin of informationList; trackBy: trackItem" (click)="onChangeCryptoCurrency(coin)">
+                    <td class="py-1">
+                        <img class="rounded-circle d-inline" width="25" alt="Coin Image" src="{{coin.image}}" >
+                        <p class="ml-2 d-inline">{{coin.name}}</p>
+                    </td>
+                    <td><p class="d-inline">{{coin.price}}</p></td>
+                    <td>
+                        <p class="perc falling d-inline" *ngIf="coin.variation.charAt(0)=='-'; else Positive">
+                            {{coin.variation}}%
+                        </p>
+
+                        <ng-template #Positive>
+                            <p class="perc rising d-inline">
+                                {{coin.variation}}%
+                            </p>
+                        </ng-template>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
