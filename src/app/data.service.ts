@@ -11,15 +11,15 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  GetTopListCoins():Promise<any>{
-    return this.http.get('https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=USD').toPromise();
+  GetTopListCoins(currency:string):Promise<any>{
+    return this.http.get('https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=' + currency).toPromise();
   }
 
   GetQuotation(cryptocurrency:string, currency:string):Promise<any>{
     return this.http.get('https://min-api.cryptocompare.com/data/price?fsym=' + cryptocurrency +'&tsyms='+ currency).toPromise();
   }
 
-  GetRegisterDaily(cryptocurrency:string):Promise<any>{
-    return this.http.get('https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + cryptocurrency + '&tsym=USD&limit=10').toPromise();
+  GetRegisterDaily(cryptocurrency:string, currency:string):Promise<any>{
+    return this.http.get('https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=10').toPromise();
   }
 }

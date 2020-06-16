@@ -178,6 +178,10 @@ label{
     color: #f26c57;
 }
 
+.perc-horizontal.falling{
+    color: #f26c57;
+}
+
 .coin-stats>.left>div .perc-horizontal {
     display: block;
     margin-top: 10px;
@@ -195,6 +199,25 @@ label{
     width: 0;
     height: 0;
     position: relative;
+}
+
+
+.perc-horizontal.rising:before {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid #0bbabc;
+    color: #0bbabc;
+    top: 0;
+    content: "";
+    display: inline-block;
+    margin-right: 5px;
+    width: 0;
+    height: 0;
+    position: relative;
+}
+
+.perc-horizontal.rising{
+    color: #0bbabc;
 }
 
 .coin-stats>.right {
