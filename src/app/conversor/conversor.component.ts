@@ -104,7 +104,6 @@ export class ConversorComponent implements OnInit {
       secondNode.firstChild.value = secondSelectValue;
     }
 
-
     this.onCalculateClick();
 
     return this.conversorCounter++;
@@ -299,8 +298,6 @@ export class ConversorComponent implements OnInit {
 
     this.getCardInformation(cryptoCurrencyName);
     this.showCryptocurrenciesDaily(cryptoCurrencyName);
-    
-    
   }
 
   createCanvas(){
