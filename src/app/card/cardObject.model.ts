@@ -1,5 +1,5 @@
 export class cardObject {
-    name:string;
+    name: string;
     mktCap:string;
     circSply:string;
     allDayVol:string;
@@ -10,7 +10,7 @@ export class cardObject {
     variation: string;
 
     constructor(name:string, mktCap:string, circSply:string, allDayVol:string, dayHigh:string, dayLow:string, image: string, price: string, variation: string) {
-        this.name = name; 
+        this.name = name;
         this.mktCap = mktCap; 
         this.circSply = circSply; 
         this.allDayVol = allDayVol; 
