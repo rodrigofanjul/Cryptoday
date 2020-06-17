@@ -30,7 +30,15 @@ export class DataService {
     return this.http.get('https://min-api.cryptocompare.com/data/price?fsym=' + cryptocurrency +'&tsyms='+ currency).toPromise();
   }
 
-  GetRegisterDaily(cryptocurrency:string, currency:string): Promise<any>{
+  GetRegisterHour(cryptocurrency:string, currency:string): Promise<any>{
+    return this.http.get('https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=10').toPromise();
+  }
+
+  GetRegisterDay(cryptocurrency:string, currency:string): Promise<any>{
+    return this.http.get('https://min-api.cryptocompare.com/data/v2/histohour?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=10').toPromise();
+  }
+
+  GetRegisterWeekly(cryptocurrency:string, currency:string): Promise<any>{
     return this.http.get('https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=10').toPromise();
   }
 }

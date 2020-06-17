@@ -13,6 +13,7 @@ export class ConversorComponent implements OnInit {
 
   //Listas de monedas
   cryptoCoins:any;
+
   coins:any = this.dataService.GetCoins();
 
   //Inputs
@@ -31,7 +32,7 @@ export class ConversorComponent implements OnInit {
   //Variables auxiliares
   aux:{
     key:string, value:string
-  };
+  } = {key:"", value:""};
   aux2:number;
   counter:number = 0;
   subscription: Subscription;
@@ -42,16 +43,22 @@ export class ConversorComponent implements OnInit {
   ngOnInit(): void {
     this.onLoad();
   }
+  
+  onLoad(){
 
-    this.dataService.GetTopListCoins("USD").then((res) => {
-        this.cryptoCoins = res;
+    if(this.subscription)
+      this.subscription.unsubscribe();
+
+    this.dataService.GetTopListCoins("USD").then((res:any) => {
+        this.cryptoCoins = res.Data;
+        
       }
     ).catch(function(val){
       console.log(val);
     });
 
     this.firstSelectInfo = "Bitcoin(BTC)";
-    this.secondSelectInfo = "Peso Argentino(ARS)";
+    this.secondSelectInfo = "Dolar Estadounidense(USD)";
 
     this.aux2 = this.amount;
 
@@ -80,6 +87,8 @@ export class ConversorComponent implements OnInit {
 
     let firstNode:any = document.getElementById("coinsContainerFirst");
     let secondNode:any = document.getElementById("coinsContainerSecond");
+
+    console.log(document.getElementById("firstCoins").innerHTML);
     let aux = firstNode.innerHTML;
 
     firstNode.innerHTML = secondNode.innerHTML;

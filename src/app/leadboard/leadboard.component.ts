@@ -17,11 +17,17 @@ export class LeadboardComponent implements OnInit {
   coins:any = this.dataService.GetCoins();
   informationList:Array<leadboardObject> = [];
   subscription: Subscription;
+  currencySubscription: Subscription;
   counter:number = 0;
   currency:string = "USD";
   cryptoCurrency:string = "BTC";
 
-  constructor(private dataService:DataService, private chartService: ChartService) { }
+  constructor(private dataService:DataService, private chartService: ChartService) {
+    this.currencySubscription = chartService.updateCurrency$.subscribe(
+      currency => {
+        this.getLeadBoardInformation(currency);
+    });
+   }
 
   ngOnInit(): void {
     this.getLeadBoardInformation(this.currency);
@@ -55,10 +61,6 @@ export class LeadboardComponent implements OnInit {
         this.informationList.push(new leadboardObject(this.counter++ , name, ("https://www.cryptocompare.com/" + image), price, variation));
       });
     });
-  }
-
-  public trackItem (index: number, item: leadboardObject) {
-    return item.id;
   }
 
   onChangeCryptoCurrency(crypto:leadboardObject){

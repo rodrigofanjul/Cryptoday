@@ -1,0 +1,76 @@
+.chart-actions {
+    height: 30px;
+    zoom: 1;
+    position: relative;
+    z-index: 3;
+    display: block;
+}
+
+.chart-actions:before {
+    content: "";
+    display: table;
+}
+
+.timeframes {
+    position: absolute;
+    top: -3px;
+    left: 0;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.timeframes li.active {
+    color: #10ade4;
+}
+
+.timeframes li {
+    color: #79878f;
+    font-size: 12px;
+    font-weight: 600;
+    width: 37px;
+    line-height: 30px;
+    text-align: center;
+    margin-right: 2px;
+    position: relative;
+    cursor: pointer;
+    letter-spacing: 1.5px;
+    -webkit-transition: color .15s;
+    -o-transition: color .15s;
+    transition: color .15s;
+    display: inline-block;
+}
+
+.timeframes li:hover:after {
+    height: 2px;
+    background: #10ade4;
+    -webkit-transition: color .15s,height .15s;
+    -o-transition: color .15s,height .15s;
+    transition: color .15s,height .15s;
+}
+
+.coin-chart .timeframes li:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #e1e4e5;
+    -webkit-transition: color .3s,height .3s;
+    -o-transition: color .3s,height .3s;
+    transition: color .3s,height .3s;
+}
+
+.timeframes li:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #e1e4e5;
+    -webkit-transition: color .3s,height .3s;
+    -o-transition: color .3s,height .3s;
+    transition: color .3s,height .3s;
+}

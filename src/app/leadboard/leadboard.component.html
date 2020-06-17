@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody id="tableRefresh">
-                <tr class="align-middle" *ngFor="let coin of informationList; trackBy: trackItem" (click)="onChangeCryptoCurrency(coin)">
+                <tr class="align-middle" *ngFor="let coin of informationList" (click)="onChangeCryptoCurrency(coin)">
                     <td class="py-1">
                         <img class="rounded-circle d-inline" width="25" alt="Coin Image" src="{{coin.image}}" >
                         <p class="ml-2 d-inline">{{coin.name}}</p>
