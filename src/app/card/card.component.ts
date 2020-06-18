@@ -26,7 +26,7 @@ export class CardComponent implements OnInit {
   card:cardObject;
   currency:string;
   cryptoCurrency:string;
-  aux;
+  interval;
 
 
   constructor(private dataService:DataService, private chartService: ChartService) { 
@@ -57,42 +57,37 @@ export class CardComponent implements OnInit {
 
   loadCard() {
     this.getCardInformation(this.cryptoCurrency, this.currency);
-    this.showCryptocurrenciesGraphicWeekly(this.cryptoCurrency, this.currency);
+    this.showCryptocurrenciesGraphicWeek(this.cryptoCurrency, this.currency);
   }
 
-  showCryptocurrenciesGraphicWeekly(cryptoCurrency:string, currency:string){
+  showCryptocurrenciesGraphicWeek(cryptoCurrency:string, currency:string){
     if(this.chartSubscription)
       this.chartSubscription.unsubscribe();
 
     this.reloadCanvas();
-    this.dataService.GetRegisterWeekly(cryptoCurrency, currency).then((res) => {
+    this.dataService.GetRegisterWeek(cryptoCurrency, currency).then((res) => {
 
       let allRegisters = res.Data.Data;
       let allDates = [];
       let allAverageQuotization = [];
       let allMinimumQuotization = [];
       let allMaximumQuotization = [];
-      let counter = 3;
 
       allRegisters.forEach((res) => {
         let jsDate = new Date(res.time * 1000);
-        
-        if(counter < 0){
 
-          allDates.push(jsDate.toLocaleDateString('en', {month:'long', day:'numeric'}));
-  
-          allAverageQuotization.push( (((res.high + res.low) / 2).toFixed(2)) );
-          allMinimumQuotization.push((res.low).toFixed(2));
-          allMaximumQuotization.push((res.high).toFixed(2));
+        jsDate.setHours(jsDate.getHours() + 3);
 
-        }
-        counter--;
+        allDates.push(jsDate.toLocaleDateString('en', {month:'long', day:'numeric'}));
 
+        allAverageQuotization.push( (((res.high + res.low) / 2).toFixed(2)) );
+        allMinimumQuotization.push((res.low).toFixed(2));
+        allMaximumQuotization.push((res.high).toFixed(2));
       });
-
+      console.log(allDates);
       let currencyInfo = this.coins.find(element => element.id == currency);
 
-      var chart = new Chart('chart-canvas', {
+      this.graphicChart = new Chart('chart-canvas', {
         type: 'line',
         data: {
           labels: allDates,
@@ -185,7 +180,6 @@ export class CardComponent implements OnInit {
     });
   }
 
-
   checkCardVariation(variation:string){
     let check = false;
 
@@ -222,7 +216,7 @@ export class CardComponent implements OnInit {
     }
   }
 
-  onShowCryptocurrenciesGraphicWeekly(){
+  onShowCryptocurrenciesGraphicWeek(){
 
     var activeElement:any = document.getElementsByClassName("active").item(0);
     var elementToActivate:any = document.getElementById("week");
@@ -231,11 +225,11 @@ export class CardComponent implements OnInit {
 
       activeElement.classList.remove("active");
       elementToActivate.classList.add("active");
-      this.showCryptocurrenciesGraphicWeekly(this.cryptoCurrency, this.currency);
+      this.showCryptocurrenciesGraphicWeek(this.cryptoCurrency, this.currency);
     }
   }
 
-  onShowCryptocurrenciesGraphicMonthly(){
+  onShowCryptocurrenciesGraphicMonth(){
     var activeElement:any = document.getElementsByClassName("active").item(0);
     var elementToActivate:any = document.getElementById("month");
 
@@ -243,7 +237,7 @@ export class CardComponent implements OnInit {
 
       activeElement.classList.remove("active");
       elementToActivate.classList.add("active");
-      this.showCryptocurrenciesGraphicWeekly(this.cryptoCurrency, this.currency);
+      this.showCryptocurrenciesGraphicWeek(this.cryptoCurrency, this.currency);
     }
   }
 
@@ -255,12 +249,15 @@ export class CardComponent implements OnInit {
 
       activeElement.classList.remove("active");
       elementToActivate.classList.add("active");
-      this.showCryptocurrenciesGraphicWeekly(this.cryptoCurrency, this.currency);
+      this.showCryptocurrenciesGraphicWeek(this.cryptoCurrency, this.currency);
     }
   }
 
 
   showCryptocurrenciesGraphicDay(cryptoCurrency:string, currency:string){
+
+    if(this.interval)
+      clearInterval(this.interval);
 
     if(this.chartSubscription)
       this.chartSubscription.unsubscribe();
@@ -273,21 +270,27 @@ export class CardComponent implements OnInit {
       let allAverageQuotization = [];
       let allMinimumQuotization = [];
       let allMaximumQuotization = [];
+      let counter = 0;
 
       allRegisters.forEach((res) => {
         let jsDate = new Date(res.time * 1000);
 
-        allDates.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
+        if(counter == 3){
 
-        allAverageQuotization.push( (((res.high + res.low) / 2).toFixed(2)) );
-        allMinimumQuotization.push((res.low).toFixed(2));
-        allMaximumQuotization.push((res.high).toFixed(2));
+          allDates.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
+  
+          allAverageQuotization.push( (((res.high + res.low) / 2).toFixed(2)) );
+          allMinimumQuotization.push((res.low).toFixed(2));
+          allMaximumQuotization.push((res.high).toFixed(2));
 
+          counter = 0
+        }
+        counter++;
       });
 
       let currencyInfo = this.coins.find(element => element.id == currency);
 
-      var chart = new Chart('chart-canvas', {
+      this.graphicChart = new Chart('chart-canvas', {
         type: 'line',
         data: {
           labels: allDates,
@@ -336,9 +339,52 @@ export class CardComponent implements OnInit {
         }
       });
     });
+
+    this.interval = setInterval(() => {
+      this.updateDayGraphic(this.graphicChart, cryptoCurrency, currency);
+    }, 3600000);
+  }
+
+  updateDayGraphic(chart:Chart ,cryptoCurrency:string, currency:string){
+
+    this.dataService.GetRegisterDay(cryptoCurrency, currency).then((res) => {
+
+      let allRegisters:Array<any> = res.Data.Data;
+
+      let lastRegisterTime = allRegisters[allRegisters.length-1]['time'];
+      let lastRegisterHigh = allRegisters[allRegisters.length-1]['high'];
+      let lastRegisterLow = allRegisters[allRegisters.length-1]['low'];
+      let lastRegisterAverage = (lastRegisterHigh + lastRegisterLow) / 2;
+      let counter = 0;
+
+      let jsDate = new Date(lastRegisterTime * 1000);  
+
+      if(counter == 3){
+
+        chart.data.labels.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
+        chart.data.labels.shift();
+  
+        chart.data.datasets[0].data.push(lastRegisterAverage);
+        chart.data.datasets[0].data.shift();
+  
+        chart.data.datasets[1].data.push(lastRegisterLow);
+        chart.data.datasets[1].data.shift();
+  
+        chart.data.datasets[2].data.push(lastRegisterHigh);
+        chart.data.datasets[2].data.shift();
+  
+        chart.update();
+
+        counter = 0;
+      }
+      counter++;
+    });
   }
 
   showCryptocurrenciesGraphicHour(cryptoCurrency:string, currency:string){
+
+    if(this.interval)
+      clearInterval(this.interval);
 
     if(this.chartSubscription)
       this.chartSubscription.unsubscribe();
@@ -356,11 +402,14 @@ export class CardComponent implements OnInit {
       allRegisters.forEach((res) => {
         let jsDate = new Date(res.time * 1000);
 
-        allDates.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
+        if(parseInt(jsDate.toLocaleTimeString(navigator.language, {minute:'2-digit'})) % 5 == 0){
 
-        allAverageQuotization.push( (((res.high + res.low) / 2).toFixed(2)) );
-        allMinimumQuotization.push((res.low).toFixed(2));
-        allMaximumQuotization.push((res.high).toFixed(2));
+          allDates.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
+  
+          allAverageQuotization.push( (((res.high + res.low) / 2).toFixed(2)) );
+          allMinimumQuotization.push((res.low).toFixed(2));
+          allMaximumQuotization.push((res.high).toFixed(2));
+        }
 
       });
 
@@ -416,7 +465,7 @@ export class CardComponent implements OnInit {
       });
     });
 
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.updateHourGraphic(this.graphicChart, cryptoCurrency, currency);
     }, 60000);
   }
@@ -433,19 +482,24 @@ export class CardComponent implements OnInit {
       let lastRegisterAverage = (lastRegisterHigh + lastRegisterLow) / 2;
 
       let jsDate = new Date(lastRegisterTime * 1000);  
-      chart.data.labels.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
-      chart.data.labels.shift();
 
-      chart.data.datasets[0].data.push(lastRegisterAverage);
-      chart.data.datasets[0].data.shift();
+      if(parseInt(jsDate.toLocaleTimeString(navigator.language, {minute:'2-digit'})) % 5 == 0){
 
-      chart.data.datasets[1].data.push(lastRegisterLow);
-      chart.data.datasets[1].data.shift();
+        chart.data.labels.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
+        chart.data.labels.shift();
+  
+        chart.data.datasets[0].data.push(lastRegisterAverage);
+        chart.data.datasets[0].data.shift();
+  
+        chart.data.datasets[1].data.push(lastRegisterLow);
+        chart.data.datasets[1].data.shift();
+  
+        chart.data.datasets[2].data.push(lastRegisterHigh);
+        chart.data.datasets[2].data.shift();
+  
+        chart.update();
+      }
 
-      chart.data.datasets[2].data.push(lastRegisterHigh);
-      chart.data.datasets[2].data.shift();
-
-      chart.update();
     });
   }
 

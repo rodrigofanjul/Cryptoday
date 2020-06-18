@@ -31,14 +31,18 @@ export class DataService {
   }
 
   GetRegisterHour(cryptocurrency:string, currency:string): Promise<any>{
-    return this.http.get('https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=10').toPromise();
+    return this.http.get('https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=60').toPromise();
   }
 
   GetRegisterDay(cryptocurrency:string, currency:string): Promise<any>{
-    return this.http.get('https://min-api.cryptocompare.com/data/v2/histohour?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=10').toPromise();
+    return this.http.get('https://min-api.cryptocompare.com/data/v2/histohour?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=24').toPromise();
   }
 
-  GetRegisterWeekly(cryptocurrency:string, currency:string): Promise<any>{
-    return this.http.get('https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=10').toPromise();
+  GetRegisterWeek(cryptocurrency:string, currency:string): Promise<any>{
+    return this.http.get('https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=7').toPromise();
+  }
+
+  GetRegisterMonth(cryptocurrency:string, currency:string): Promise<any>{
+    return this.http.get('https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=30').toPromise();
   }
 }
