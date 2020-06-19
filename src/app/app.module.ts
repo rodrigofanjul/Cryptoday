@@ -14,6 +14,7 @@ import { ConversorComponent } from './conversor/conversor.component';
 import { LinksTableComponent } from './links-table/links-table.component';
 import { LeadboardComponent } from './leadboard/leadboard.component';
 import { CardComponent } from './card/card.component';
+import { GraphicComponent } from './graphic/graphic.component';
 // import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
@@ -23,7 +24,8 @@ import { CardComponent } from './card/card.component';
     ConversorComponent,
     LinksTableComponent,
     LeadboardComponent,
-    CardComponent
+    CardComponent,
+    GraphicComponent
   ],
   imports: [
     BrowserModule,

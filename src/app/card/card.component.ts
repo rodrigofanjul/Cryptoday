@@ -54,14 +54,65 @@ export class CardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCard();
-    this.showGraphicBitcoinNow(this.currency);
-    this.showGraphicEthereumNow(this.currency);
   }
 
   loadCard() {
     this.getCardInformation(this.cryptoCurrency, this.currency);
     this.showCryptocurrenciesGraphic(this.cryptoCurrency, this.currency);
   }
+
+  reloadCanvas(){
+    var node = document.getElementById('chart');
+    node.querySelectorAll('*').forEach(n => n.remove());
+    var newCanvas = document.createElement('canvas');
+    newCanvas.setAttribute("id", "chart-canvas");
+    node.appendChild(newCanvas);
+  }
+
+  checkCardVariation(variation:string){
+    let check = false;
+
+    if(this.card.variation){ 
+      if( this.card.variation.charAt(0)=='-')
+        check = true;
+    }
+
+    return check;
+  }
+
+  getCardInformation(cryptoCurrencyName:string, currency:string){
+    
+    if(this.subscription)
+      this.subscription.unsubscribe();
+
+    this.subscription = timer(0, 10000).pipe(
+      switchMap(() => this.dataService.GetTopListCoins(currency))
+    ).subscribe((res) => {
+
+      let allRegisters:Array<any> = res.Data;
+
+      allRegisters.forEach((res) => {
+        
+        let name = res['CoinInfo']['Name'];
+
+        if(name == cryptoCurrencyName){
+
+          let price = res['DISPLAY'][currency]['PRICE'];
+          let variation = res['DISPLAY'][currency]['CHANGEPCT24HOUR'];
+          let image = res['CoinInfo']['ImageUrl'];
+          let mktCap = res['DISPLAY'][currency]['MKTCAP'];
+          let circSply = res['DISPLAY'][currency]['SUPPLY'];
+          let allDayVol = res['DISPLAY'][currency]['TOTALVOLUME24HTO'];
+          let dayHigh = res['DISPLAY'][currency]['HIGH24HOUR'];
+          let dayLow = res['DISPLAY'][currency]['LOW24HOUR'];
+
+          this.card = new cardObject(name, mktCap, circSply, allDayVol, dayHigh, dayLow, "https://www.cryptocompare.com" + image, price, variation);
+        }
+
+      });
+      
+    });
+  }  
 
   showCryptocurrenciesGraphic(cryptoCurrency:string, currency:string){
     var activeElement:any = document.getElementsByClassName("active").item(0);
@@ -161,124 +212,6 @@ export class CardComponent implements OnInit {
       });
     });
   }
-
-  reloadCanvas(){
-    var node = document.getElementById('chart');
-    node.querySelectorAll('*').forEach(n => n.remove());
-    var newCanvas = document.createElement('canvas');
-    newCanvas.setAttribute("id", "chart-canvas");
-    node.appendChild(newCanvas);
-  }
-
-  getCardInformation(cryptoCurrencyName:string, currency:string){
-    
-    if(this.subscription)
-      this.subscription.unsubscribe();
-
-    this.subscription = timer(0, 10000).pipe(
-      switchMap(() => this.dataService.GetTopListCoins(currency))
-    ).subscribe((res) => {
-
-      let allRegisters:Array<any> = res.Data;
-
-      allRegisters.forEach((res) => {
-        
-        let name = res['CoinInfo']['Name'];
-
-        if(name == cryptoCurrencyName){
-
-          let price = res['DISPLAY'][currency]['PRICE'];
-          let variation = res['DISPLAY'][currency]['CHANGEPCT24HOUR'];
-          let image = res['CoinInfo']['ImageUrl'];
-          let mktCap = res['DISPLAY'][currency]['MKTCAP'];
-          let circSply = res['DISPLAY'][currency]['SUPPLY'];
-          let allDayVol = res['DISPLAY'][currency]['TOTALVOLUME24HTO'];
-          let dayHigh = res['DISPLAY'][currency]['HIGH24HOUR'];
-          let dayLow = res['DISPLAY'][currency]['LOW24HOUR'];
-
-          this.card = new cardObject(name, mktCap, circSply, allDayVol, dayHigh, dayLow, "https://www.cryptocompare.com" + image, price, variation);
-        }
-
-      });
-      
-    });
-  }
-
-  checkCardVariation(variation:string){
-    let check = false;
-
-    if(this.card.variation){ 
-      if( this.card.variation.charAt(0)=='-')
-        check = true;
-    }
-
-    return check;
-  }
-
-  onShowCryptocurrenciesGraphicHour(){
-    var activeElement:any = document.getElementsByClassName("active").item(0);
-    var elementToActivate:any = document.getElementById("hour");
-
-    if(activeElement.id != elementToActivate.id){
-
-      activeElement.classList.remove("active");
-      elementToActivate.classList.add("active");
-      this.showCryptocurrenciesGraphicHour(this.cryptoCurrency, this.currency);
-    }
-  }
-
-  onShowCryptocurrenciesGraphicDay(){
-    var activeElement:any = document.getElementsByClassName("active").item(0);
-    var elementToActivate:any = document.getElementById("day");
-
-    if(activeElement.id != elementToActivate.id){
-
-      activeElement.classList.remove("active");
-      elementToActivate.classList.add("active");
-      this.showCryptocurrenciesGraphicDay(this.cryptoCurrency, this.currency);
-    }
-  }
-
-  onShowCryptocurrenciesGraphicWeek(){
-
-    var activeElement:any = document.getElementsByClassName("active").item(0);
-    var elementToActivate:any = document.getElementById("week");
-
-    console.log(activeElement.id);
-    if(activeElement.id != elementToActivate.id){
-
-      activeElement.classList.remove("active");
-      elementToActivate.classList.add("active");
-      this.showCryptocurrenciesGraphicWeek(this.cryptoCurrency, this.currency);
-    }
-  }
-
-  
-
-  onShowCryptocurrenciesGraphicMonth(){
-    var activeElement:any = document.getElementsByClassName("active").item(0);
-    var elementToActivate:any = document.getElementById("month");
-
-    if(activeElement.id != elementToActivate.id){
-
-      activeElement.classList.remove("active");
-      elementToActivate.classList.add("active");
-      this.showCryptocurrenciesGraphicMonth(this.cryptoCurrency, this.currency);
-    }
-  }
-
-  onShowCryptocurrenciesGraphicYear(){
-    var activeElement:any = document.getElementsByClassName("active").item(0);
-    var elementToActivate:any = document.getElementById("year");
-
-    if(activeElement.id != elementToActivate.id){
-
-      activeElement.classList.remove("active");
-      elementToActivate.classList.add("active");
-      this.showCryptocurrenciesGraphicYear(this.cryptoCurrency, this.currency);
-    }
-  }
-
 
   showCryptocurrenciesGraphicDay(cryptoCurrency:string, currency:string){
 
@@ -696,174 +629,66 @@ export class CardComponent implements OnInit {
 
   }
 
-  showGraphicBitcoinNow(currency:string){
+  onShowCryptocurrenciesGraphicHour(){
+    var activeElement:any = document.getElementsByClassName("active").item(0);
+    var elementToActivate:any = document.getElementById("hour");
 
-    this.reloadCanvas();
+    if(activeElement.id != elementToActivate.id){
 
-    this.dataService.GetRegisterBitcoinNow(currency).then((res) => {
-
-      let allRegisters = res.Data.Data;
-      let allDates = [];
-      let allAverageQuotization = [];
-
-      allRegisters.forEach((res) => {
-        let jsDate = new Date(res.time * 1000);
-
-        allDates.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
-
-        allAverageQuotization.push( (((res.high + res.low) / 2).toFixed(2)) );
-      });
-
-      this.graphicChartBitcoinNow = new Chart('chart-bitcoin-now', {
-        type: 'line',
-        data: {
-          labels: allDates,
-          datasets: [
-            {
-              label:"Average",
-              data: allAverageQuotization,
-              borderColor: 'rgba(234, 52, 52, 1)',
-              backgroundColor: 'rgba(237, 84, 128, 0.67)',
-              fill: true
-            }
-          ]
-        },
-        options: {
-          legend: {
-            display: false
-          },
-          elements:{
-            line:{
-              tension: 0
-            }
-          },
-          scales: {
-            xAxes: [{
-              display: true
-            }],
-            yAxes: [{
-              display: true
-            }]
-          }
-        }
-      });
-    
-      setInterval(() => {
-        this.updateGraphicBitcoinNow(this.graphicChartBitcoinNow, currency, allDates[allDates.length-1]);
-      }, 10000);
-    });
-
+      activeElement.classList.remove("active");
+      elementToActivate.classList.add("active");
+      this.showCryptocurrenciesGraphicHour(this.cryptoCurrency, this.currency);
+    }
   }
 
-  updateGraphicBitcoinNow(chart:Chart, currency:string, lastDate:string){
+  onShowCryptocurrenciesGraphicDay(){
+    var activeElement:any = document.getElementsByClassName("active").item(0);
+    var elementToActivate:any = document.getElementById("day");
 
-    this.dataService.GetRegisterBitcoinNow(currency).then((res) => {
+    if(activeElement.id != elementToActivate.id){
 
-      let allRegisters:Array<any> = res.Data.Data;
-
-      let lastRegisterTime = allRegisters[allRegisters.length-1]['time'];
-      let lastRegisterHigh = allRegisters[allRegisters.length-1]['high'];
-      let lastRegisterLow = allRegisters[allRegisters.length-1]['low'];
-      let lastRegisterAverage = parseInt(((lastRegisterHigh + lastRegisterLow) / 2).toFixed(2));
-
-      let jsDate = new Date(lastRegisterTime * 1000);  
-
-      if(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) != lastDate){
-
-        chart.data.labels.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
-        chart.data.labels.shift();
-  
-        chart.data.datasets[0].data.push(lastRegisterAverage);
-        chart.data.datasets[0].data.shift();
-        chart.update();
-      }
-
-    });
+      activeElement.classList.remove("active");
+      elementToActivate.classList.add("active");
+      this.showCryptocurrenciesGraphicDay(this.cryptoCurrency, this.currency);
+    }
   }
 
-  showGraphicEthereumNow(currency:string){
+  onShowCryptocurrenciesGraphicWeek(){
 
-    this.reloadCanvas();
+    var activeElement:any = document.getElementsByClassName("active").item(0);
+    var elementToActivate:any = document.getElementById("week");
 
-    this.dataService.GetRegisterEthereumNow(currency).then((res) => {
+    console.log(activeElement.id);
+    if(activeElement.id != elementToActivate.id){
 
-      let allRegisters = res.Data.Data;
-      let allDates = [];
-      let allAverageQuotization = [];
+      activeElement.classList.remove("active");
+      elementToActivate.classList.add("active");
+      this.showCryptocurrenciesGraphicWeek(this.cryptoCurrency, this.currency);
+    }
+  }  
 
-      allRegisters.forEach((res) => {
-        let jsDate = new Date(res.time * 1000);
+  onShowCryptocurrenciesGraphicMonth(){
+    var activeElement:any = document.getElementsByClassName("active").item(0);
+    var elementToActivate:any = document.getElementById("month");
 
-        allDates.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
+    if(activeElement.id != elementToActivate.id){
 
-        allAverageQuotization.push( (((res.high + res.low) / 2).toFixed(2)) );
-      });
-
-      this.graphicChartEthereumNow = new Chart('chart-ethereum-now', {
-        type: 'line',
-        data: {
-          labels: allDates,
-          datasets: [
-            {
-              label:"Average",
-              data: allAverageQuotization,
-              borderColor: 'rgba(234, 52, 52, 1)',
-              backgroundColor: 'rgba(237, 84, 128, 0.67)',
-              fill: 'end'
-            }
-          ]
-        },
-        options: {
-          legend: {
-            display: false
-          },
-          elements:{
-            line:{
-              tension: 0
-            }
-          },
-          scales: {
-            xAxes: [{
-              display: true
-            }],
-            yAxes: [{
-              display: true
-            }]
-          }
-        }
-      });
-    
-      setInterval(() => {
-        this.updateGraphicEthereumNow(this.graphicChartEthereumNow, currency, allDates[allDates.length-1]);
-      }, 10000);
-    });
-
+      activeElement.classList.remove("active");
+      elementToActivate.classList.add("active");
+      this.showCryptocurrenciesGraphicMonth(this.cryptoCurrency, this.currency);
+    }
   }
 
-  updateGraphicEthereumNow(chart:Chart, currency:string, lastDate:string){
+  onShowCryptocurrenciesGraphicYear(){
+    var activeElement:any = document.getElementsByClassName("active").item(0);
+    var elementToActivate:any = document.getElementById("year");
 
-    this.dataService.GetRegisterEthereumNow(currency).then((res) => {
+    if(activeElement.id != elementToActivate.id){
 
-      let allRegisters:Array<any> = res.Data.Data;
-
-      let lastRegisterTime = allRegisters[allRegisters.length-1]['time'];
-      let lastRegisterHigh = allRegisters[allRegisters.length-1]['high'];
-      let lastRegisterLow = allRegisters[allRegisters.length-1]['low'];
-      let lastRegisterAverage = (lastRegisterHigh + lastRegisterLow) / 2;
-
-      let jsDate = new Date(lastRegisterTime * 1000);  
-
-      if(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) != lastDate){
-
-        chart.data.labels.push(jsDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
-        chart.data.labels.shift();
-  
-        chart.data.datasets[0].data.push(lastRegisterAverage);
-        chart.data.datasets[0].data.shift();
-        chart.update();
-      }
-
-    });
+      activeElement.classList.remove("active");
+      elementToActivate.classList.add("active");
+      this.showCryptocurrenciesGraphicYear(this.cryptoCurrency, this.currency);
+    }
   }
 
 }

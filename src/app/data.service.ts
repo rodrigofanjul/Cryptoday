@@ -50,11 +50,7 @@ export class DataService {
     return this.http.get('https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=360').toPromise();
   }
 
-  GetRegisterBitcoinNow(currency:string): Promise<any>{
-    return this.http.get('https://min-api.cryptocompare.com/data/v2/histominute?fsym=BTC&tsym=' + currency + '&limit=9').toPromise();
-  }
-
-  GetRegisterEthereumNow(currency:string): Promise<any>{
-    return this.http.get('https://min-api.cryptocompare.com/data/v2/histominute?fsym=ETH&tsym=' + currency + '&limit=9').toPromise();
+  GetRegisterNow(cryptocurrency:string, currency:string): Promise<any>{
+    return this.http.get('https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + cryptocurrency + '&tsym=' + currency + '&limit=9').toPromise();
   }
 }

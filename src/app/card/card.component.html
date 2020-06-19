@@ -1,6 +1,7 @@
 <div class="card">
     <div class="card-header">
-        Coin Stats
+        <img id="coin-image-card" class="rounded-circle display-inline" width="25" alt="{{card.name}}" src="{{card.image}}">
+        &nbsp;Coin Stats
     </div>
     <div class="card-body">
         <div class="row">
@@ -9,7 +10,7 @@
                     <div class="card-body">
 
                         <div class="row mx-auto">
-                            <img id="coin-image-card" class="rounded-circle w-20" alt="{{card.name}}" src="{{card.image}}">
+                            
                             <h4 class="ml-2 coin-price">{{card.price}}</h4>
                         </div>
                         <div class="row">
@@ -51,70 +52,21 @@
                 </div>   
             </div>                         
         </div>
-    </div>       
-    <div class="chart-actions">
-        <ul class="timeframes">
-            <li id="hour" class (click)="onShowCryptocurrenciesGraphicHour()">1HR</li>
-            <li id="day" class (click)="onShowCryptocurrenciesGraphicDay()">1D</li>
-            <li id="week" class="active" (click)="onShowCryptocurrenciesGraphicWeek()">1W</li>
-            <li id="month" class (click)="onShowCryptocurrenciesGraphicMonth()">1M</li>
-            <li id="year" class (click)="onShowCryptocurrenciesGraphicYear()">1Y</li>
-        </ul>
-    </div>     
+        <div class="row mt-2">
+            <div class="col-md-4 offset-md-4">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" id="hour" class="btn btn-outline-info" (click)="onShowCryptocurrenciesGraphicHour()">1HR</button>
+                    <button type="button" id="day" class="btn btn-outline-info" (click)="onShowCryptocurrenciesGraphicDay()">1D</button>
+                    <button type="button" id="week" class="btn btn-outline-info active" (click)="onShowCryptocurrenciesGraphicWeek()">1W</button>
+                    <button type="button" id="month" class="btn btn-outline-info" (click)="onShowCryptocurrenciesGraphicMonth()">1M</button>
+                    <button type="button" id="year" class="btn btn-outline-info" (click)="onShowCryptocurrenciesGraphicYear()">1Y</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="chart-wrapper mt-1">
         <div id="chart">
             <canvas id="chart-canvas"></canvas>
         </div>
     </div>
 </div>
-
-<div class="card-body">
-    <div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-12 mt-2">
-            <div class="card">
-                <div class="card-header">
-                    <img class="rounded-circle d-inline" width="25" alt="Coin Image" src="https://www.cryptocompare.com/media/19633/btc.png">
-                    Bitcoin Now
-                </div>
-                <div class="card-body">
-                    <div class="row">
-
-                        <div class="chart-wrapper mt-1">
-                            <div id="chart">
-                                <canvas id="chart-bitcoin-now"></canvas>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                
-            </div>   
-        </div>                         
-    </div>
-</div>       
-
-<div class="card-body">
-    <div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-12 mt-2">
-            <div class="card">
-                <div class="card-header">
-                    <img class="rounded-circle d-inline" width="25" alt="Coin Image" src="https://www.cryptocompare.com/media/20646/eth_logo.png">
-                    Ethereum Now
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                
-                        <div class="chart-wrapper mt-1">
-                            <div id="chart">
-                                <canvas id="chart-ethereum-now"></canvas>
-                            </div>
-                        </div>
-                
-                    </div>
-                </div>
-                
-            </div>   
-        </div>                         
-    </div>
-</div>      
-
