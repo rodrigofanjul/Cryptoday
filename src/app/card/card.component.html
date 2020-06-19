@@ -58,7 +58,7 @@
             <li id="day" class (click)="onShowCryptocurrenciesGraphicDay()">1D</li>
             <li id="week" class="active" (click)="onShowCryptocurrenciesGraphicWeek()">1W</li>
             <li id="month" class (click)="onShowCryptocurrenciesGraphicMonth()">1M</li>
-            <li id="year" class (click)="onShowCryptocurrenciesGraphicYearly()">1Y</li>
+            <li id="year" class (click)="onShowCryptocurrenciesGraphicYear()">1Y</li>
         </ul>
     </div>     
     <div class="chart-wrapper mt-1">
@@ -67,3 +67,54 @@
         </div>
     </div>
 </div>
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-12 mt-2">
+            <div class="card">
+                <div class="card-header">
+                    <img class="rounded-circle d-inline" width="25" alt="Coin Image" src="https://www.cryptocompare.com/media/19633/btc.png">
+                    Bitcoin Now
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="chart-wrapper mt-1">
+                            <div id="chart">
+                                <canvas id="chart-bitcoin-now"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                
+            </div>   
+        </div>                         
+    </div>
+</div>       
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-12 mt-2">
+            <div class="card">
+                <div class="card-header">
+                    <img class="rounded-circle d-inline" width="25" alt="Coin Image" src="https://www.cryptocompare.com/media/20646/eth_logo.png">
+                    Ethereum Now
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                
+                        <div class="chart-wrapper mt-1">
+                            <div id="chart">
+                                <canvas id="chart-ethereum-now"></canvas>
+                            </div>
+                        </div>
+                
+                    </div>
+                </div>
+                
+            </div>   
+        </div>                         
+    </div>
+</div>      
+

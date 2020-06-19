@@ -63,7 +63,7 @@ export class ConversorComponent implements OnInit {
     this.aux2 = this.amount;
 
     this.subscription = timer(0, 5000).pipe(
-      switchMap(() => this.dataService.GetQuotation("BTC","ARS"))
+      switchMap(() => this.dataService.GetQuotation("BTC","USD"))
     ).subscribe(res => {
         let quotation:any = res;
         this.aux = quotation;
