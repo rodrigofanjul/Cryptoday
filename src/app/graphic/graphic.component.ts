@@ -21,6 +21,9 @@ export class GraphicComponent implements OnInit {
   currency:string;
   @Input() cryptoCurrency: string;
   graphicChartNow:Chart;
+  interval;
+  currencyImage:string;
+  currencyName:string
 
   constructor(private dataService:DataService, private chartService: ChartService) { 
     this.currencySubscription = chartService.updateCurrency$.subscribe(
@@ -36,11 +39,19 @@ export class GraphicComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setAtributtes(this.cryptoCurrency);
     this.loadGraphic(this.cryptoCurrency, this.currency);
-    console.log(this.cryptoCurrency);
   }
 
   loadGraphic(cryptoCurrency:string, currency:string){
+
+    if(this.interval)
+      clearInterval(this.interval);
+
+    if(document.getElementById('chart-now-'+cryptoCurrency) != null){
+      console.log(cryptoCurrency);
+      this.reloadCanvas(cryptoCurrency);
+    }
 
     this.dataService.GetRegisterNow(cryptoCurrency, currency).then((res) => {
 
@@ -90,7 +101,7 @@ export class GraphicComponent implements OnInit {
         }
       });
     
-      setInterval(() => {
+      this.interval = setInterval(() => {
         this.updateGraphicNow(this.graphicChartNow, cryptoCurrency, currency, allDates[allDates.length-1]);
       }, 10000);
     });
@@ -121,5 +132,35 @@ export class GraphicComponent implements OnInit {
 
     });
   }
+
+  reloadCanvas(cryptoCurrency:string){
+    var node = document.getElementById('chart-' + cryptoCurrency);
+    console.log(node);
+    node.querySelectorAll('*').forEach(n => n.remove());
+    console.log(node);
+    var newCanvas = document.createElement('canvas');
+    newCanvas.setAttribute("id", 'chart-now-'+cryptoCurrency);
+    node.appendChild(newCanvas);
+  }
+
+  setAtributtes(cryptoCurrency:string){
+    
+    this.dataService.GetTopListCoins("USD").then(res =>{
+      let allRegisters = res.Data;
+      let aux:string;
+      allRegisters.forEach((res) => {
+
+        aux = res['CoinInfo']['Name'];
+
+        if(cryptoCurrency == aux){
+          
+          this.currencyImage = "https://www.cryptocompare.com" + res['CoinInfo']['ImageUrl'];
+          this.currencyName = res['CoinInfo']['FullName'];
+        }
+
+      });
+    })
+  }
+
 }
 

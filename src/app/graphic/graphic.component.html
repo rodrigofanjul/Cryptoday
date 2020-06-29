@@ -1,13 +1,13 @@
 <div class="card">
     <div class="card-header">
-        <img class="rounded-circle d-inline" width="25" alt="Coin Image" src="https://www.cryptocompare.com/media/19633/btc.png">
-        Bitcoin Now
+        <img class="rounded-circle d-inline" width="25" alt="Coin Image" src="{{currencyImage}}">
+        {{currencyName}} Now
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
                 <div class="chart-wrapper mt-1">
-                    <div id="chart">
+                    <div id="chart-{{cryptoCurrency}}">
                         <canvas id="chart-now-{{cryptoCurrency}}"></canvas>
                     </div>
                 </div>
