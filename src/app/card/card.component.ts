@@ -310,7 +310,7 @@ export class CardComponent implements OnInit {
       let lastRegisterTime = allRegisters[allRegisters.length-1]['time'];
       let lastRegisterHigh = allRegisters[allRegisters.length-1]['high'];
       let lastRegisterLow = allRegisters[allRegisters.length-1]['low'];
-      let lastRegisterAverage = (lastRegisterHigh + lastRegisterLow) / 2;
+      let lastRegisterAverage = parseFloat(((lastRegisterHigh + lastRegisterLow) / 2).toFixed(2));
       let counter = 0;
 
       let jsDate = new Date(lastRegisterTime * 1000);  
@@ -432,7 +432,7 @@ export class CardComponent implements OnInit {
       let lastRegisterTime = allRegisters[allRegisters.length-1]['time'];
       let lastRegisterHigh = allRegisters[allRegisters.length-1]['high'];
       let lastRegisterLow = allRegisters[allRegisters.length-1]['low'];
-      let lastRegisterAverage = (lastRegisterHigh + lastRegisterLow) / 2;
+      let lastRegisterAverage = parseFloat(((lastRegisterHigh + lastRegisterLow) / 2).toFixed(2));
 
       let jsDate = new Date(lastRegisterTime * 1000);  
 
