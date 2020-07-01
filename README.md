@@ -1,5 +1,7 @@
 # Cryptoday
 
+Aplicacion Web programada en Typescript, HTML, Bootstrap y libreria ChartJS con framework Angular. Aplicacion de conversion, cotizacion y graficos de Criptomonedas en tiempo real.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.1.
 
 ## Development server
