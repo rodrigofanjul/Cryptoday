@@ -7,24 +7,24 @@
         
         <input type="number" name="title" #newtitle class="form-control mb-4" value="1" min="1" [(ngModel)]="amount" autofocus>
         <div id="coinsContainerFirst">
-            <select id="firstCoins" class="browser-default custom-select custom-select-lg mb-3">
+            <select id="firstCoins" class="browser-default custom-select custom-select-lg mb-2">
                 <option *ngFor="let coin of cryptoCoins" value="{{coin.CoinInfo.Name}}">
                     {{coin.CoinInfo.FullName}}({{coin.CoinInfo.Name}})</option>
             </select>
         </div>
 
-        <button (click)="onExchange()" type="button" class="btn btn-primary mb-3">
+        <button (click)="onExchange()" type="button" class="btn btn-primary mb-2">
             Change
         </button>
 
         <div id="coinsContainerSecond">
-            <select id="secondCoins" class="browser-default custom-select custom-select-lg mb-3">
+            <select id="secondCoins" class="browser-default custom-select custom-select-lg mb-2">
                 <option *ngFor="let coin of coins" value="{{coin.id}}" id="secondSelectInfo">
                     {{coin.name}}({{coin.id}})</option>
             </select>
         </div>
 
-        <button (click)="onCalculate()" type="button" class="btn btn-primary">
+        <button (click)="onCalculate()" type="button" class="btn btn-primary mb-2">
             Accept
         </button>
 
